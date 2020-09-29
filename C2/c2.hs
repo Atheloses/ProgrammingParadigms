@@ -43,7 +43,7 @@ getLast (_:xs) = getLast(xs)
 isElement :: Eq a => a -> [a] -> Bool
 isElement n [] = False
 isElement n (x:xs) | n == x = True
-                   |otherwise = isElement n xs
+                   |otherwise = isElement n xs 
 
 
 combine :: [a] -> [a] -> [a]
