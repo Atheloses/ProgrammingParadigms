@@ -3,10 +3,6 @@
 --length' :: [a] -> Int
 
 
--- Create a function that sums the integers.
-sum' :: Int -> Int -> Int
-sum' x y = x + y
-
 -- Create a function that sums the list of integers.
 sumIt :: [Int] -> Int
 sumIt [] = 0
