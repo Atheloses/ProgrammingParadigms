@@ -1,5 +1,6 @@
 import Data.List
 import Data.Maybe
+import Data.Set (Set, empty, insert, member)
 
 type Result = [String]
 
@@ -54,7 +55,7 @@ goToRelative input (relRow, relCol) = goTo input (row, col) (relRow + row, relCo
     (row, col) = getPos input 's'
 
 goTo :: Result -> (Int, Int) -> (Int, Int) -> Result
-goTo input from to = if' (canGoTo input ' ' to) (setAt (setAt input to (getAt input from)) from ' ') input
+goTo input from to = if (canGoTo input ' ' to) then (setAt (setAt input to (getAt input from)) from ' ') else input
 
 canGoTo :: Result -> Char -> (Int, Int) -> Bool
 canGoTo input elem (row, column) = (row > 0 && column > 0 && row <= (length input) && column <= length (input !! (row -1)) && (getAt input (row, column)) == elem)
@@ -63,6 +64,26 @@ maze :: Result -> String -> Result
 maze input (x : xs) = maze (move input x) xs
 maze input [] = input
 
-if' :: Bool -> a -> a -> a
-if' True x _ = x
-if' False _ y = y
+getNeighbors' :: Result -> (Int, Int) -> Set [(Int, Int)] -> [(Int, Int)]
+getNeighbors' input (currentRow, currentColumn) visited =
+  filter
+    (\(row, column) -> (canGoTo input ' ' (row, column)) && (member [(row, column)] visited) == False)
+    [(currentRow + deltaRow, currentColumn + deltaColumn) | (deltaRow, deltaColumn) <- [(0, -1), (0, 1), (1, 0), (-1, 0)]]
+
+length' :: Result -> (Int, Int) -> Int
+length' input finish = length (bfs' input [getPos input 's'] empty [] finish) - 1
+
+bfs' :: Result -> [(Int, Int)] -> Set [(Int, Int)] -> [((Int, Int), (Int, Int))] -> (Int, Int) -> [(Int, Int)]
+bfs' _ [] _ _ _ = []
+bfs' input (start : xs) visited queue finish
+  | (start /= finish) = (bfs' input (xs ++ neighbors) (Data.Set.insert [start] visited) (queue ++ [((a, b), start) | (a, b) <- neighbors]) finish)
+  | otherwise = (constructPath start queue [])
+  where
+    neighbors = (getNeighbors' input start visited)
+
+constructPath :: (Int, Int) -> [((Int, Int), (Int, Int))] -> [(Int, Int)] -> [(Int, Int)]
+constructPath (currentRow, currentCol) queue route
+  | (length points) > 0 = (constructPath (head points) queue ([(currentRow, currentCol)] ++ route))
+  | otherwise = [(currentRow, currentCol)] ++ route
+  where
+    points = [(foundRow, foundCol) | ((findRow, findCol), (foundRow, foundCol)) <- queue, (findRow == currentRow && findCol == currentCol)]
