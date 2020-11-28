@@ -75,15 +75,15 @@ length' input finish = length (bfs' input [getPos input 's'] empty [] finish) - 
 
 bfs' :: Result -> [(Int, Int)] -> Set [(Int, Int)] -> [((Int, Int), (Int, Int))] -> (Int, Int) -> [(Int, Int)]
 bfs' _ [] _ _ _ = []
-bfs' input (start : queue) visited routes finish
-  | (start /= finish) = (bfs' input (queue ++ neighbors) (Data.Set.insert [start] visited) (routes ++ [((a, b), start) | (a, b) <- neighbors]) finish)
-  | otherwise = (constructPath start routes [])
+bfs' input (start : queue) visited paths finish
+  | (start /= finish) = (bfs' input (queue ++ neighbors) (Data.Set.insert [start] visited) (paths ++ [((a, b), start) | (a, b) <- neighbors]) finish)
+  | otherwise = (constructPath start paths [])
   where
     neighbors = (getNeighbors' input start visited)
 
 constructPath :: (Int, Int) -> [((Int, Int), (Int, Int))] -> [(Int, Int)] -> [(Int, Int)]
-constructPath (currentRow, currentCol) routes correctRoute
-  | (length points) > 0 = (constructPath (head points) routes ([(currentRow, currentCol)] ++ correctRoute))
-  | otherwise = [(currentRow, currentCol)] ++ correctRoute
+constructPath (currentRow, currentCol) paths correctPath
+  | (length points) > 0 = (constructPath (head points) paths ([(currentRow, currentCol)] ++ correctPath))
+  | otherwise = [(currentRow, currentCol)] ++ correctPath
   where
-    points = [(foundRow, foundCol) | ((findRow, findCol), (foundRow, foundCol)) <- routes, (findRow == currentRow && findCol == currentCol)]
+    points = [(foundRow, foundCol) | ((findRow, findCol), (foundRow, foundCol)) <- paths, (findRow == currentRow && findCol == currentCol)]
