@@ -1,3 +1,4 @@
+# The Coq Proof Assistant
 ## Windows - Installing Coq
 ### Install Chocolatey with PowerShell
 * First check if `Get-ExecutionPolicy` returns Restricted
@@ -16,5 +17,5 @@
 * https://marketplace.visualstudio.com/items?itemName=maximedenes.vscoq
 
 ## Coq introduction
-* oq is a proof assistant. It means that it is designed to develop mathematical proofs, and especially to write formal specifications, programs and proofs that programs comply to their specifications. An interesting additional feature of Coq is that it can automatically extract executable programs from specifications, as either Objective Caml or Haskell source code.
+* Coq is a proof assistant. It means that it is designed to develop mathematical proofs, and especially to write formal specifications, programs and proofs that programs comply to their specifications. An interesting additional feature of Coq is that it can automatically extract executable programs from specifications, as either Objective Caml or Haskell source code.
 * Properties, programs and proofs are formalized in the same language called the Calculus of Inductive Constructions (CIC). Then, all logical judgments in Coq are typing judgments: the very heart of Coq is in fact a type-checking algorithm.
